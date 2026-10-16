@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeAI — AI-Powered Resume Analyzer & Career Assistant</title>
+  <meta name="description" content="Boost your job interview chances with ResumeAI. Advanced ATS resume scoring, keyword gap analysis, and tailored career recommendations powered by AI.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    /* Hero Section Styling */
+    .hero-section {
+      padding: 90px 0 60px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 580px;
+      line-height: 1.65;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* Live Interactive Demo Preview Card */
+    .demo-card {
+      padding: 32px;
+      position: relative;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6), 0 0 30px -5px var(--primary-glow);
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .demo-candidate {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .demo-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .demo-score-box {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      margin-bottom: 22px;
+    }
+
+    .score-circle {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent-emerald) 0% 92%, rgba(255, 255, 255, 0.1) 92% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .score-circle-inner {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent-emerald);
+    }
+
+    .demo-skills-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .tag-match {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tag-gap {
+      background: rgba(244, 63, 94, 0.12);
+      color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+    }
+
+    /* Section Headings */
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 54px;
+    }
+
+    .section-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin: 12px 0 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 24px;
+      margin-bottom: 90px;
+    }
+
+    .feature-card {
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .feature-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* How It Works Steps */
+    .steps-section {
+      padding: 60px 0 90px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      position: relative;
+    }
+
+    .step-card {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Call to Action Banner */
+    .cta-section {
+      margin-bottom: 90px;
+    }
+
+    .cta-banner {
+      padding: 60px 40px;
+      text-align: center;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 0;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: 2.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand-logo" id="home-logo">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <span>Resume<span class="gradient-text-accent">AI</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="#preview" class="nav-link">ATS Preview</a></li>
+      </ul>
+
+      <div class="nav-actions" id="nav-auth-actions">
+        <a href="/pages/login.html" class="btn btn-secondary" id="nav-login-btn">Sign In</a>
+        <a href="/pages/register.html" class="btn btn-primary" id="nav-register-btn">Get Started Free</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" aria-label="Hero Overview">
+    <div class="container hero-grid">
+      
+      <div class="hero-content">
+        <div>
+          <span class="badge badge-ai">
+            <span class="badge-pulse"></span>
+            Next-Gen AI Resume Intelligence
+          </span>
+        </div>
+        <h1 class="hero-title">
+          Land 3x More Interviews With <span class="gradient-text">AI Resume Power</span>
+        </h1>
+        <p class="hero-subtitle">
+          Scan your resume against real job descriptions, uncover hidden keyword gaps, check your ATS compatibility score, and receive AI-driven career recommendations in seconds.
+        </p>
+
+        <div class="hero-cta">
+          <a href="/pages/register.html" class="btn btn-primary" style="padding: 14px 30px; font-size: 1.05rem;" id="hero-get-started-btn">
+            Analyze My Resume Free
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#preview" class="btn btn-secondary" style="padding: 14px 24px;">
+            View Sample Scorecard
+          </a>
+        </div>
+
+        <div style="display: flex; gap: 24px; align-items: center; margin-top: 10px; color: var(--text-dim); font-size: 0.88rem;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            No credit card required
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            PDF & DOCX Support
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Interactive Demo Card -->
+      <div class="glass-panel demo-card" id="preview">
+        <div class="demo-header">
+          <div class="demo-candidate">
+            <div class="demo-avatar">JD</div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.95rem;">John Doe</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Senior Software Engineer</div>
+            </div>
+          </div>
+          <span class="badge badge-success">ATS Optimized</span>
+        </div>
+
+        <div class="demo-score-box">
+          <div class="score-circle">
+            <div class="score-circle-inner">92%</div>
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);">Exceptional Match</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted);">High probability of passing automated employer filters.</div>
+          </div>
+        </div>
+
+        <div class="demo-skills-label">Detected Core Skills</div>
+        <div class="tags-cloud">
+          <span class="tag tag-match">Python</span>
+          <span class="tag tag-match">Node.js</span>
+          <span class="tag tag-match">React</span>
+          <span class="tag tag-match">System Design</span>
+          <span class="tag tag-match">MySQL</span>
+          <span class="tag tag-match">Docker</span>
+        </div>
+
+        <div class="demo-skills-label" style="color: #fb7185;">Missing Keywords in Target Job</div>
+        <div class="tags-cloud">
+          <span class="tag tag-gap">+ Kubernetes</span>
+          <span class="tag tag-gap">+ Kafka Streaming</span>
+          <span class="tag tag-gap">+ CI/CD Automation</span>
+        </div>
+
+        <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: var(--text-muted);">
+          <span>Predicted Role: <strong style="color: var(--accent-cyan);">Senior AI / Full-Stack Engineer</strong></span>
+          <span style="color: #38bdf8;">Verified by ML</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="container" id="features" style="padding: 60px 0 20px;">
+    <div class="section-header">
+      <span class="badge badge-ai">Core Capabilities</span>
+      <h2 class="section-title">Built For The Modern Job Market</h2>
+      <p class="section-desc">Traditional resumes get lost in applicant tracking systems. ResumeAI analyzes your resume just like enterprise recruiters do.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="glass-panel feature-card">
+        <div class="feature-icon-box" style="background: rgba(99, 102, 241, 0.15); color: var(--primary);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <circle cx="11.5" cy="14.5" r="2.5"></circle>
+            <path d="m13.5 16.5 3 3"></path>
+          </svg>
+        </div>
+        <h3>ATS Compatibility Engine</h3>
+        <p>Parses your resume structure, heading tags, and typography to ensure complete compatibility with Workday, Greenhouse, and Lever.</p>
+      </div>
+
+      <div class="glass-panel feature-card">
+        <div class="feature-icon-box" style="background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+        <h3>Keyword Gap Analysis</h3>
+        <p>Paste any job description to instantly uncover missing hard skills, software competencies, and certifications recruiters look for.</p>
+      </div>
+
+      <div class="glass-panel feature-card">
+        <div class="feature-icon-box" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-violet);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </div>
+        <h3>ML Role Prediction</h3>
+        <p>Our machine learning models categorize your experience and benchmark your profile against thousands of industry roles.</p>
+      </div>
+
+      <div class="glass-panel feature-card">
+        <div class="feature-icon-box" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3>Actionable Improvements</h3>
+        <p>Receive line-by-line bullet point suggestions to turn passive duties into measurable, impact-driven achievements.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="container steps-section" id="how-it-works">
+    <div class="section-header">
+      <span class="badge badge-ai">Simple 3-Step Process</span>
+      <h2 class="section-title">How ResumeAI Works</h2>
+      <p class="section-desc">From raw resume to interview-ready in under 60 seconds.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="glass-panel step-card">
+        <div class="step-num">1</div>
+        <h3>Upload Your Resume</h3>
+        <p>Simply upload your existing resume in PDF or Word (.docx) format directly to your private, encrypted workspace.</p>
+      </div>
+
+      <div class="glass-panel step-card">
+        <div class="step-num">2</div>
+        <h3>Run AI Deep Extraction</h3>
+        <p>Our NLP engine parses your experience, skills, and formatting, checking against 100+ recruiter criteria.</p>
+      </div>
+
+      <div class="glass-panel step-card">
+        <div class="step-num">3</div>
+        <h3>Optimize & Get Hired</h3>
+        <p>Follow tailored suggestions, fill keyword gaps for target job openings, and download an ATS-proof version.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="container cta-section">
+    <div class="cta-banner">
+      <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 12px;">Ready to Elevate Your Career?</h2>
+      <p style="color: var(--text-muted); max-width: 540px; margin: 0 auto 28px;">
+        Join ambitious professionals using ResumeAI to accelerate job search success.
+      </p>
+      <a href="/pages/register.html" class="btn btn-primary" style="padding: 14px 34px; font-size: 1.05rem;" id="cta-bottom-btn">
+        Create Your Free Account
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div>
+        <strong>Resume<span class="gradient-text-accent">AI</span></strong> — AI-Powered Resume Analyzer and Career Assistant.
+      </div>
+      <div>
+        Built with Node.js, Express, MySQL & Python ML.
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    // Check if user is already logged in to customize Navbar
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await API.getMe();
+        if (res.success && res.user) {
+          const authActions = document.getElementById('nav-auth-actions');
+          if (authActions) {
+            authActions.innerHTML = `
+              <a href="/pages/dashboard.html" class="btn btn-primary">
+                Dashboard (${res.user.full_name.split(' ')[0]})
+              </a>
+            `;
+          }
+        }
+      } catch (e) {
+        // Not logged in — default buttons remain
+      }
+    });
+  </script>
+</body>
+</html>

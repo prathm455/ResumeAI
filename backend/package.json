@@ -1,0 +1,26 @@
+{
+  "name": "resumeai-backend",
+  "version": "1.0.0",
+  "description": "ResumeAI — AI-Powered Resume Analyzer and Career Assistant (Node.js backend)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "echo \"Tests will be added in Phase 7\" && exit 0"
+  },
+  "keywords": ["resume", "AI", "career"],
+  "author": "Prathmesh",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mysql-session": "^3.0.2",
+    "express-session": "^1.18.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.0",
+    "mysql2": "^3.9.7"
+  }
+}

@@ -1,0 +1,28 @@
+
+# Dependencies
+node_modules/
+backend/node_modules/
+ml-service/__pycache__/
+ml-service/.venv/
+
+# Environment secrets — NEVER commit
+.env
+.env.*
+!.env.example
+backend/.env
+
+# Uploaded resumes — private user data
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
