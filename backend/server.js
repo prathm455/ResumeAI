@@ -27,6 +27,7 @@ const pool = require('./config/db');
 
 // -- Route files --
 const authRoutes = require('./routes/auth.routes');
+const resumeRoutes = require('./routes/resume.routes');
 
 // ── App Setup ─────────────────────────────────────────
 const app  = express();
@@ -99,6 +100,7 @@ app.use(express.static(frontendPath));
 
 // ── API Routes ────────────────────────────────────────
 app.use('/auth', authRoutes);
+app.use('/resumes', resumeRoutes);
 
 // ── Health Check ─────────────────────────────────────
 app.get('/api/health', (req, res) => {

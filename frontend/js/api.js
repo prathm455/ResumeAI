@@ -44,5 +44,41 @@ const API = {
   async checkHealth() {
     const res = await fetch('/api/health');
     return res.json();
+  },
+
+  async uploadResume(formData) {
+    const res = await fetch('/resumes/upload', {
+      method: 'POST',
+      credentials: 'same-origin',
+      body: formData
+    });
+    return res.json();
+  },
+
+  async getResumes() {
+    const res = await fetch('/resumes', {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+
+  async getResumeById(id) {
+    const res = await fetch(`/resumes/${id}`, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+
+  async deleteResume(id) {
+    const res = await fetch(`/resumes/${id}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
   }
 };

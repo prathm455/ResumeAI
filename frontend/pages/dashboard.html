@@ -151,29 +151,70 @@
           </div>
         </section>
 
-        <!-- Insights & History Preview -->
-        <section class="glass-panel insights-card" aria-label="Recent Analyses">
+        <!-- Uploaded Resumes List Section -->
+        <section class="glass-panel insights-card" aria-label="Uploaded Resumes">
           <div class="insights-card-header">
-            <h2>Recent Analyses</h2>
-            <span class="badge badge-ai">Phase 2 Pipeline</span>
+            <h2>Your Uploaded Resumes</h2>
+            <span class="badge badge-success" id="resumes-badge-count">0 Resumes</span>
           </div>
 
-          <div class="empty-state">
+          <div id="resumes-empty-state" class="empty-state">
             <div class="empty-state-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="12"></line>
-                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
               </svg>
             </div>
-            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">No Resumes Analyzed Yet</h3>
-            <p>Upload your resume using the upload box to generate your first ATS score card and career guidance report.</p>
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 6px; color: var(--text-main);">No Resumes Uploaded Yet</h3>
+            <p>Upload your PDF or DOCX resume using the dropzone on the left to extract text and view details.</p>
+          </div>
+
+          <div id="resumes-list" class="resumes-list" style="display: none;">
+            <!-- Dynamically populated by dashboard.js -->
           </div>
         </section>
 
       </div>
     </div>
   </main>
+
+  <!-- Extracted Text Preview Modal -->
+  <div class="modal-overlay" id="text-modal">
+    <div class="glass-panel modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span id="modal-resume-title">Resume Content</span>
+        </div>
+        <button class="action-icon-btn" id="modal-close-btn" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <pre class="extracted-text-view" id="modal-extracted-text">Loading extracted text...</pre>
+      </div>
+
+      <div class="modal-footer">
+        <span class="badge badge-ai" id="modal-word-count">0 Words</span>
+        <button class="btn btn-secondary" id="modal-copy-btn" style="padding: 8px 16px; font-size: 0.85rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy Text
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script src="/js/toast.js"></script>
   <script src="/js/api.js"></script>
