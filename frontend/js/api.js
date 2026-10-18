@@ -80,5 +80,51 @@ const API = {
       headers: { 'Content-Type': 'application/json' }
     });
     return res.json();
+  },
+
+  async runAnalysis(resumeId, jobDescription) {
+    const res = await fetch('/analyses/run', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resume_id: resumeId, job_description: jobDescription })
+    });
+    return res.json();
+  },
+
+  async getAnalyses() {
+    const res = await fetch('/analyses', {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+
+  async getAnalysisById(id) {
+    const res = await fetch(`/analyses/${id}`, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+
+  async deleteAnalysis(id) {
+    const res = await fetch(`/analyses/${id}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
+  },
+
+  async getStatsSummary() {
+    const res = await fetch('/analyses/stats/summary', {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return res.json();
   }
 };
