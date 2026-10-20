@@ -229,13 +229,20 @@
             </div>
 
             <div class="scorecard-summary">
-              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
                 <h3 id="scorecard-status-title">Analysis Completed</h3>
                 <span class="badge badge-success" id="scorecard-match-badge">Good Match</span>
+                <span class="badge badge-ai" id="scorecard-engine-badge" style="font-size: 0.72rem;">
+                  <span class="badge-pulse"></span>
+                  Python ML Service
+                </span>
               </div>
               <p id="scorecard-subtitle">Benchmarked against target role and industry standards.</p>
               <div style="margin-top: 8px; font-size: 0.88rem; color: var(--text-main);">
                 Predicted Career Role: <strong class="gradient-text-accent" id="scorecard-predicted-role">Software Engineer</strong>
+              </div>
+              <div id="scorecard-ml-metrics" style="display: flex; gap: 16px; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap;">
+                <!-- Dynamically populated by dashboard.js -->
               </div>
             </div>
           </div>
@@ -301,6 +308,151 @@
         <div id="analyses-history-list" class="resumes-list" style="display: none;">
           <!-- Dynamically populated by dashboard.js -->
         </div>
+      </section>
+
+      <!-- Phase 5: AI Career Assistant & Content Studio -->
+      <section class="glass-panel upload-card" style="margin-top: 32px;" aria-label="AI Career Assistant Studio">
+        <div class="upload-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h2>AI Career Assistant & Content Studio</h2>
+            <p>Elevate your resume bullets with quantifiable metrics, draft customized cover letters, and prepare for high-stakes interviews.</p>
+          </div>
+          <span class="badge badge-ai">Phase 5 Career Hub</span>
+        </div>
+
+        <!-- Studio Sub-Navigation Tabs -->
+        <div class="career-tabs">
+          <button type="button" class="career-tab-btn active" data-tab="tab-bullet">
+            ⚡ Bullet Point Rewriter
+          </button>
+          <button type="button" class="career-tab-btn" data-tab="tab-cover">
+            📄 Cover Letter Generator
+          </button>
+          <button type="button" class="career-tab-btn" data-tab="tab-interview">
+            🎯 Interview Coach & Q&A
+          </button>
+        </div>
+
+        <!-- Tab 1: Bullet Point Rewriter Panel -->
+        <div class="career-panel active" id="tab-bullet">
+          <form id="bullet-rewriter-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="form-group">
+              <div class="form-label">
+                <label for="bullet-input">Paste Any Resume Bullet Point</label>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" id="btn-sample-bullet-1" class="sample-btn">+ Sample Dev Bullet</button>
+                  <button type="button" id="btn-sample-bullet-2" class="sample-btn">+ Sample Data/Cloud Bullet</button>
+                </div>
+              </div>
+              <textarea id="bullet-input" class="form-textarea" style="min-height: 80px;" placeholder="e.g. Worked on frontend web features and fixed various user bugs..."></textarea>
+            </div>
+
+            <button type="submit" id="btn-rewrite-bullet" class="btn btn-primary" style="padding: 12px 24px; align-self: flex-start;">
+              <span class="spinner" id="bullet-spinner"></span>
+              <span>Elevate & Quantify Bullet</span>
+            </button>
+          </form>
+
+          <div id="bullet-results" style="display: none; margin-top: 10px;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Optimized High-Impact Variations:</h3>
+            <div class="bullet-variations-list" id="bullet-variations-container"></div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Cover Letter Generator Panel -->
+        <div class="career-panel" id="tab-cover">
+          <form id="cover-letter-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+              <div class="form-group">
+                <label class="form-label" for="cover-resume-select">Select Source Resume</label>
+                <select id="cover-resume-select" class="form-select" required>
+                  <option value="">-- Choose a resume --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cover-company-input">Target Company Name</label>
+                <input type="text" id="cover-company-input" class="form-input" placeholder="e.g. Stripe, Google, Acme Corp" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cover-role-input">Target Role Title</label>
+                <input type="text" id="cover-role-input" class="form-input" placeholder="e.g. Senior Full-Stack Engineer" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cover-job-desc">Job Description / Requirements (Optional for deeper personalization)</label>
+              <textarea id="cover-job-desc" class="form-textarea" style="min-height: 90px;" placeholder="Paste job requirements or key skills to align your cover letter accomplishments directly..."></textarea>
+            </div>
+
+            <button type="submit" id="btn-generate-cover" class="btn btn-primary" style="padding: 12px 24px; align-self: flex-start;">
+              <span class="spinner" id="cover-spinner"></span>
+              <span>Generate Tailored Cover Letter</span>
+            </button>
+          </form>
+
+          <div id="cover-results" style="display: none; margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <h3 style="font-size: 1.05rem; font-weight: 700;">Your Customized Cover Letter</h3>
+                <span class="badge badge-ai" id="cover-word-count">0 Words</span>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn btn-secondary" id="btn-copy-cover" style="padding: 6px 14px; font-size: 0.85rem;">
+                  Copy Letter
+                </button>
+                <button type="button" class="btn btn-primary" id="btn-download-cover" style="padding: 6px 14px; font-size: 0.85rem;">
+                  Download (.txt)
+                </button>
+              </div>
+            </div>
+
+            <!-- Dynamic Guidelines Verification Badges -->
+            <div id="cover-meta-bar" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
+              <span class="badge badge-success" id="cover-tier-badge" style="font-size: 0.75rem;">Experience Tier</span>
+              <span class="badge badge-secondary" id="cover-role-badge" style="font-size: 0.75rem;">Exact Role Match</span>
+              <span class="badge badge-ai" id="cover-qc-badge" style="font-size: 0.75rem;">✓ Zero Unsupported Claims</span>
+            </div>
+
+            <div id="cover-skills-container" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; font-size: 0.8rem; color: var(--text-dim);">
+              <span style="font-weight: 600; color: var(--text-muted);">Verified Skills Applied:</span>
+              <div id="cover-skills-pills" style="display: inline-flex; gap: 6px; flex-wrap: wrap;"></div>
+            </div>
+
+            <pre class="cover-letter-paper" id="cover-letter-text"></pre>
+          </div>
+        </div>
+
+        <!-- Tab 3: Interview Coach & Q&A Panel -->
+        <div class="career-panel" id="tab-interview">
+          <form id="interview-prep-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+              <div class="form-group">
+                <label class="form-label" for="interview-resume-select">Select Source Resume</label>
+                <select id="interview-resume-select" class="form-select" required>
+                  <option value="">-- Choose a resume --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="interview-job-desc">Target Job Description (Identifies technical deep dives & skill gap questions)</label>
+                <textarea id="interview-job-desc" class="form-textarea" style="min-height: 90px;" placeholder="Paste job requirements to generate role-specific questions and talking points..."></textarea>
+              </div>
+            </div>
+
+            <button type="submit" id="btn-generate-interview" class="btn btn-primary" style="padding: 12px 24px; align-self: flex-start;">
+              <span class="spinner" id="interview-spinner"></span>
+              <span>Predict Interview Questions & Answers</span>
+            </button>
+          </form>
+
+          <div id="interview-results" style="display: none; margin-top: 14px;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px;">Predicted High-Probability Interview Questions:</h3>
+            <div style="display: flex; flex-direction: column; gap: 16px;" id="interview-questions-container"></div>
+          </div>
+        </div>
+
       </section>
     </div>
   </main>

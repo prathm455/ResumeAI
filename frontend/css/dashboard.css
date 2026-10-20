@@ -671,6 +671,157 @@
   line-height: 1.5;
 }
 
+/* Phase 5: Career Assistant Studio */
+.career-tabs {
+  display: flex;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.career-tab-btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.career-tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.career-tab-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.career-panel {
+  display: none;
+}
+
+.career-panel.active {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Bullet Variations */
+.bullet-variations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.bullet-variation-card {
+  padding: 18px 22px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color var(--transition-fast);
+}
+
+.bullet-variation-card:hover {
+  border-color: var(--border-hover);
+}
+
+.bullet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bullet-style-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.bullet-text {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.bullet-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Cover Letter Paper Preview */
+.cover-letter-paper {
+  background: rgba(9, 13, 22, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 28px 32px;
+  font-family: 'Georgia', serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 52vh;
+  overflow-y: auto;
+}
+
+/* Interview Prep Cards */
+.interview-q-card {
+  padding: 20px 24px;
+  background: rgba(15, 23, 42, 0.5);
+  border-left: 4px solid var(--accent-cyan);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.interview-q-title {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.talking-points-box {
+  background: rgba(9, 13, 22, 0.5);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+}
+
+.talking-points-box ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
 /* Responsive */
 @media (max-width: 900px) {
   .workspace-grid {

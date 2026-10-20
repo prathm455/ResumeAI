@@ -156,17 +156,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (badgeCountEl) badgeCountEl.textContent = `${count} Resume${count === 1 ? '' : 's'}`;
       if (statResumesCount) statResumesCount.textContent = count;
 
-      // Populate Select Dropdown
-      if (selectEl) {
-        const currentVal = selectEl.value;
-        selectEl.innerHTML = '<option value="">-- Choose an uploaded resume --</option>' +
-          cachedResumes.map(r => `<option value="${r.id}">${escapeHtml(r.original_name)} (${r.file_type.toUpperCase()})</option>`).join('');
-        if (currentVal && cachedResumes.some(r => r.id == currentVal)) {
-          selectEl.value = currentVal;
-        } else if (cachedResumes.length > 0) {
-          selectEl.value = cachedResumes[0].id;
+      // Populate All Resume Select Dropdowns
+      ['analysis-resume-select', 'cover-resume-select', 'interview-resume-select'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const currentVal = el.value;
+          el.innerHTML = '<option value="">-- Choose an uploaded resume --</option>' +
+            cachedResumes.map(r => `<option value="${r.id}">${escapeHtml(r.original_name)} (${r.file_type.toUpperCase()})</option>`).join('');
+          if (currentVal && cachedResumes.some(r => r.id == currentVal)) {
+            el.value = currentVal;
+          } else if (cachedResumes.length > 0) {
+            el.value = cachedResumes[0].id;
+          }
         }
-      }
+      });
 
       if (count === 0) {
         if (emptyStateEl) emptyStateEl.style.display = 'flex';
@@ -376,6 +379,33 @@ Requirements & Technical Skills:
 
     if (predictedRoleEl) {
       predictedRoleEl.textContent = analysis.predicted_role || 'Software Engineer';
+    }
+
+    // Engine badge & ML metrics
+    const engineBadge = document.getElementById('scorecard-engine-badge');
+    const mlMetrics = document.getElementById('scorecard-ml-metrics');
+
+    if (engineBadge) {
+      if (analysis.engine_source && analysis.engine_source.includes('Python')) {
+        engineBadge.style.display = 'inline-flex';
+        engineBadge.className = 'badge badge-ai';
+        engineBadge.innerHTML = '<span class="badge-pulse"></span> Python ML Service (scikit-learn)';
+      } else {
+        engineBadge.style.display = 'inline-flex';
+        engineBadge.className = 'badge badge-secondary';
+        engineBadge.innerHTML = 'Native Rule Engine';
+      }
+    }
+
+    if (mlMetrics) {
+      const items = [];
+      if (analysis.cosine_similarity !== null && analysis.cosine_similarity !== undefined) {
+        items.push(`<span>Cosine Vector Similarity: <strong style="color: #38bdf8;">${(analysis.cosine_similarity * 100).toFixed(1)}%</strong></span>`);
+      }
+      if (analysis.role_confidence) {
+        items.push(`<span>Role Classification Confidence: <strong style="color: #6ee7b7;">${Math.round(analysis.role_confidence * 100)}%</strong></span>`);
+      }
+      mlMetrics.innerHTML = items.join('<span style="color: rgba(255,255,255,0.2);">|</span>');
     }
 
     // Matched Skills
@@ -612,6 +642,292 @@ Requirements & Technical Skills:
           .catch(() => showToast('Failed to copy to clipboard.', 'error'));
       }
     });
+  }
+
+  // 10. Phase 5: Career Assistant Studio Sub-Navigation
+  const careerTabBtns = document.querySelectorAll('.career-tab-btn');
+  const careerPanels = document.querySelectorAll('.career-panel');
+
+  careerTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      careerTabBtns.forEach(b => b.classList.remove('active'));
+      careerPanels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const targetId = btn.getAttribute('data-tab');
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) targetPanel.classList.add('active');
+    });
+  });
+
+  // Tool 1: Bullet Point Rewriter
+  const bulletForm = document.getElementById('bullet-rewriter-form');
+  const bulletInput = document.getElementById('bullet-input');
+  const bulletSpinner = document.getElementById('bullet-spinner');
+  const bulletResults = document.getElementById('bullet-results');
+  const bulletContainer = document.getElementById('bullet-variations-container');
+  const sampleBullet1 = document.getElementById('btn-sample-bullet-1');
+  const sampleBullet2 = document.getElementById('btn-sample-bullet-2');
+
+  if (sampleBullet1 && bulletInput) {
+    sampleBullet1.addEventListener('click', () => {
+      bulletInput.value = 'Worked on frontend components using React and helped reduce page load bugs.';
+    });
+  }
+
+  if (sampleBullet2 && bulletInput) {
+    sampleBullet2.addEventListener('click', () => {
+      bulletInput.value = 'Responsible for writing Python backend APIs and managing MySQL queries in the cloud.';
+    });
+  }
+
+  if (bulletForm && bulletInput) {
+    bulletForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = bulletInput.value.trim();
+      if (!text) {
+        showToast('Please enter a bullet point to rewrite.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-rewrite-bullet');
+      try {
+        submitBtn.disabled = true;
+        if (bulletSpinner) bulletSpinner.style.display = 'inline-block';
+
+        const res = await API.rewriteBullet(text);
+
+        if (res.success && res.result) {
+          showToast('Bullet point elevated successfully!', 'success');
+          renderBulletVariations(res.result);
+        } else {
+          showToast(res.message || 'Failed to rewrite bullet.', 'error');
+        }
+      } catch (err) {
+        console.error('Bullet rewriter error:', err);
+        showToast('Error rewriting bullet point.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        if (bulletSpinner) bulletSpinner.style.display = 'none';
+      }
+    });
+  }
+
+  function renderBulletVariations(data) {
+    if (!bulletResults || !bulletContainer) return;
+    bulletResults.style.display = 'block';
+
+    bulletContainer.innerHTML = data.variations.map((v, i) => `
+      <div class="bullet-variation-card">
+        <div class="bullet-card-header">
+          <span class="bullet-style-title">${escapeHtml(v.style)}</span>
+          <span class="badge badge-success" style="font-size: 0.72rem;">${escapeHtml(v.badge)}</span>
+        </div>
+        <p class="bullet-text">${escapeHtml(v.text)}</p>
+        <div class="bullet-card-footer">
+          <span>Focus: <em>${escapeHtml(v.metrics_highlight)}</em></span>
+          <button type="button" class="btn btn-secondary btn-copy-variation" data-text="${escapeHtml(v.text)}" style="padding: 4px 10px; font-size: 0.75rem;">
+            Copy Variation
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    bulletContainer.querySelectorAll('.btn-copy-variation').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const textToCopy = btn.getAttribute('data-text');
+        navigator.clipboard.writeText(textToCopy)
+          .then(() => showToast('Variation copied to clipboard!', 'success'))
+          .catch(() => showToast('Failed to copy.', 'error'));
+      });
+    });
+
+    bulletResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Tool 2: Cover Letter Generator
+  const coverForm = document.getElementById('cover-letter-form');
+  const coverResumeSelect = document.getElementById('cover-resume-select');
+  const coverCompanyInput = document.getElementById('cover-company-input');
+  const coverRoleInput = document.getElementById('cover-role-input');
+  const coverJobDesc = document.getElementById('cover-job-desc');
+  const coverSpinner = document.getElementById('cover-spinner');
+  const coverResults = document.getElementById('cover-results');
+  const coverLetterText = document.getElementById('cover-letter-text');
+  const coverWordCount = document.getElementById('cover-word-count');
+  const btnCopyCover = document.getElementById('btn-copy-cover');
+  const btnDownloadCover = document.getElementById('btn-download-cover');
+
+  let currentCoverLetter = '';
+
+  if (coverForm) {
+    coverForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resumeId = coverResumeSelect.value;
+      const company = coverCompanyInput.value.trim();
+      const role = coverRoleInput.value.trim();
+      const jd = coverJobDesc.value.trim();
+
+      if (!resumeId || !company || !role) {
+        showToast('Please select a resume, company name, and role title.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-generate-cover');
+      try {
+        submitBtn.disabled = true;
+        if (coverSpinner) coverSpinner.style.display = 'inline-block';
+
+        const res = await API.generateCoverLetter({
+          resume_id: resumeId,
+          company_name: company,
+          role_title: role,
+          job_description: jd
+        });
+
+        if (res.success && res.result) {
+          showToast('Cover letter generated!', 'success');
+          const r = res.result;
+          currentCoverLetter = r.cover_letter;
+          coverLetterText.textContent = currentCoverLetter;
+          coverWordCount.textContent = `${r.word_count} Words`;
+
+          const tierBadge = document.getElementById('cover-tier-badge');
+          const roleBadge = document.getElementById('cover-role-badge');
+          const qcBadge = document.getElementById('cover-qc-badge');
+          const skillsPills = document.getElementById('cover-skills-pills');
+
+          if (tierBadge) {
+            tierBadge.textContent = r.experience_level || 'Grounded Profile';
+          }
+          if (roleBadge) {
+            roleBadge.textContent = `${r.targeted_role} @ ${r.targeted_company}`;
+          }
+          if (qcBadge && r.quality_check) {
+            qcBadge.textContent = r.quality_check.status === 'PASSED'
+              ? '✓ 7 Guidelines Verified & Grounded'
+              : 'AI Verified';
+          }
+          if (skillsPills) {
+            const skills = r.matched_skills_used || [];
+            if (skills.length > 0) {
+              skillsPills.innerHTML = skills.map(s => `
+                <span class="skill-pill matched" style="font-size: 0.75rem; padding: 2px 8px;">
+                  ${escapeHtml(s)}
+                </span>
+              `).join('');
+            } else {
+              skillsPills.innerHTML = '<span style="font-size: 0.75rem; color: var(--text-dim);">Core Software Fundamentals</span>';
+            }
+          }
+
+          coverResults.style.display = 'block';
+          coverResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          showToast(res.message || 'Failed to generate cover letter.', 'error');
+        }
+      } catch (err) {
+        console.error('Cover letter error:', err);
+        showToast('Error generating cover letter.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        if (coverSpinner) coverSpinner.style.display = 'none';
+      }
+    });
+  }
+
+  if (btnCopyCover) {
+    btnCopyCover.addEventListener('click', () => {
+      if (!currentCoverLetter) return;
+      navigator.clipboard.writeText(currentCoverLetter)
+        .then(() => showToast('Cover letter copied to clipboard!', 'success'))
+        .catch(() => showToast('Failed to copy.', 'error'));
+    });
+  }
+
+  if (btnDownloadCover) {
+    btnDownloadCover.addEventListener('click', () => {
+      if (!currentCoverLetter) return;
+      const company = (coverCompanyInput.value.trim() || 'Company').replace(/\s+/g, '_');
+      const blob = new Blob([currentCoverLetter], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Cover_Letter_${company}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Cover letter downloaded!', 'success');
+    });
+  }
+
+  // Tool 3: Interview Coach & Q&A
+  const interviewForm = document.getElementById('interview-prep-form');
+  const interviewResumeSelect = document.getElementById('interview-resume-select');
+  const interviewJobDesc = document.getElementById('interview-job-desc');
+  const interviewSpinner = document.getElementById('interview-spinner');
+  const interviewResults = document.getElementById('interview-results');
+  const interviewContainer = document.getElementById('interview-questions-container');
+
+  if (interviewForm) {
+    interviewForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resumeId = interviewResumeSelect.value;
+      const jd = interviewJobDesc.value.trim();
+
+      if (!resumeId) {
+        showToast('Please select a resume to analyze for interview questions.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-generate-interview');
+      try {
+        submitBtn.disabled = true;
+        if (interviewSpinner) interviewSpinner.style.display = 'inline-block';
+
+        const res = await API.generateInterviewPrep({
+          resume_id: resumeId,
+          job_description: jd
+        });
+
+        if (res.success && res.result) {
+          showToast('Predicted interview questions generated!', 'success');
+          renderInterviewQuestions(res.result);
+        } else {
+          showToast(res.message || 'Failed to generate questions.', 'error');
+        }
+      } catch (err) {
+        console.error('Interview prep error:', err);
+        showToast('Error generating interview questions.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        if (interviewSpinner) interviewSpinner.style.display = 'none';
+      }
+    });
+  }
+
+  function renderInterviewQuestions(data) {
+    if (!interviewResults || !interviewContainer) return;
+    interviewResults.style.display = 'block';
+
+    const questions = data.questions || [];
+    interviewContainer.innerHTML = questions.map(q => `
+      <div class="interview-q-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span class="badge badge-ai" style="font-size: 0.75rem;">${escapeHtml(q.category)}</span>
+          <span style="font-size: 0.78rem; color: var(--accent-cyan); font-weight: 600;">Framework: ${escapeHtml(q.recommended_model)}</span>
+        </div>
+        <div class="interview-q-title">Q${q.id}: ${escapeHtml(q.question)}</div>
+        <div class="talking-points-box">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Key Talking Points & Strategy:</div>
+          <ul>
+            ${q.talking_points.map(tp => `<li>${escapeHtml(tp)}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `).join('');
+
+    interviewResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function escapeHtml(str) {

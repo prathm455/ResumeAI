@@ -6,7 +6,7 @@
 
 const AnalysisModel = require('../models/analysis.model');
 const ResumeModel = require('../models/resume.model');
-const { analyzeResume } = require('../utils/analyzer.util');
+const { analyzeWithML } = require('../utils/ml-client.util');
 
 /**
  * Runs ATS analysis on a chosen resume against an optional job description.
@@ -34,8 +34,8 @@ async function runAnalysis(req, res) {
       });
     }
 
-    // Run intelligent scoring and matching algorithm
-    const analysisResult = analyzeResume(resume.extracted_text, job_description || '');
+    // Run Machine Learning / NLP scoring and matching
+    const analysisResult = await analyzeWithML(resume.extracted_text, job_description || '');
 
     // Save to database
     const newId = await AnalysisModel.create({
@@ -57,6 +57,10 @@ async function runAnalysis(req, res) {
         resume_id: resumeIdNum,
         resume_name: resume.original_name,
         match_score: analysisResult.match_score,
+        cosine_similarity: analysisResult.cosine_similarity,
+        role_confidence: analysisResult.role_confidence,
+        role_distribution: analysisResult.role_distribution,
+        engine_source: analysisResult.engine_source,
         matched_skills: analysisResult.matched_skills,
         missing_skills: analysisResult.missing_skills,
         predicted_role: analysisResult.predicted_role,

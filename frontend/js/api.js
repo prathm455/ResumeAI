@@ -126,5 +126,35 @@ const API = {
       headers: { 'Content-Type': 'application/json' }
     });
     return res.json();
+  },
+
+  async rewriteBullet(bulletPoint, focusRole = '', targetSkill = '') {
+    const res = await fetch('/career/rewrite-bullet', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bullet_point: bulletPoint, focus_role: focusRole, target_skill: targetSkill })
+    });
+    return res.json();
+  },
+
+  async generateCoverLetter(data) {
+    const res = await fetch('/career/cover-letter', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
+  async generateInterviewPrep(data) {
+    const res = await fetch('/career/interview-prep', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return res.json();
   }
 };
