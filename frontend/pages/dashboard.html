@@ -38,6 +38,13 @@
           </div>
         </div>
 
+        <a href="/pages/admin.html" id="nav-admin-link" class="btn btn-secondary" style="display: none; padding: 8px 14px; font-size: 0.85rem; border-color: rgba(168, 85, 247, 0.4); color: #c084fc; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Admin Console</span>
+        </a>
+
         <button id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" title="Sign out">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -63,7 +70,7 @@
         <div class="welcome-badge">
           <span class="badge badge-ai">
             <span class="badge-pulse"></span>
-            AI Engine Online (Phase 1 Ready)
+            AI Engine Online (Active)
           </span>
         </div>
       </section>
@@ -176,14 +183,14 @@
 
       </div>
 
-      <!-- Phase 3: AI Job Matcher & ATS Scoring Section -->
+      <!-- AI Job Matcher & ATS Scoring Section -->
       <section class="glass-panel upload-card" style="margin-top: 32px;" aria-label="AI Job Match Analyzer">
         <div class="upload-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
           <div>
             <h2>AI Job Match & ATS Scoring Engine</h2>
             <p>Select an uploaded resume and optionally paste a target job description to run deep keyword matching, role prediction, and ATS audits.</p>
           </div>
-          <span class="badge badge-ai">Phase 3 AI Pipeline</span>
+          <span class="badge badge-ai">ATS Match Pipeline</span>
         </div>
 
         <form id="analyze-form" style="display: flex; flex-direction: column; gap: 18px; margin-top: 10px;">
@@ -310,52 +317,111 @@
         </div>
       </section>
 
-      <!-- Phase 5: AI Career Assistant & Content Studio -->
+      <!-- AI Career Assistant & Content Studio -->
       <section class="glass-panel upload-card" style="margin-top: 32px;" aria-label="AI Career Assistant Studio">
         <div class="upload-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
           <div>
             <h2>AI Career Assistant & Content Studio</h2>
-            <p>Elevate your resume bullets with quantifiable metrics, draft customized cover letters, and prepare for high-stakes interviews.</p>
+            <p>Master technical interviews with interactive difficulty-tailored Q&A and draft personalized, grounded cover letters.</p>
           </div>
-          <span class="badge badge-ai">Phase 5 Career Hub</span>
+          <span class="badge badge-ai">Career Intelligence Hub</span>
         </div>
 
         <!-- Studio Sub-Navigation Tabs -->
         <div class="career-tabs">
-          <button type="button" class="career-tab-btn active" data-tab="tab-bullet">
-            ⚡ Bullet Point Rewriter
+          <button type="button" class="career-tab-btn active" data-tab="tab-interview">
+            🎯 Interview Coach & Q&A
           </button>
           <button type="button" class="career-tab-btn" data-tab="tab-cover">
             📄 Cover Letter Generator
           </button>
-          <button type="button" class="career-tab-btn" data-tab="tab-interview">
-            🎯 Interview Coach & Q&A
-          </button>
         </div>
 
-        <!-- Tab 1: Bullet Point Rewriter Panel -->
-        <div class="career-panel active" id="tab-bullet">
-          <form id="bullet-rewriter-form" style="display: flex; flex-direction: column; gap: 16px;">
-            <div class="form-group">
-              <div class="form-label">
-                <label for="bullet-input">Paste Any Resume Bullet Point</label>
-                <div style="display: flex; gap: 8px;">
-                  <button type="button" id="btn-sample-bullet-1" class="sample-btn">+ Sample Dev Bullet</button>
-                  <button type="button" id="btn-sample-bullet-2" class="sample-btn">+ Sample Data/Cloud Bullet</button>
-                </div>
+        <!-- Tab 1: Interview Coach & Q&A Panel (Active by default) -->
+        <div class="career-panel active" id="tab-interview">
+          <form id="interview-prep-form" style="display: flex; flex-direction: column; gap: 18px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+              <div class="form-group">
+                <label class="form-label" for="interview-resume-select">Select Source Resume</label>
+                <select id="interview-resume-select" class="form-select" required>
+                  <option value="">-- Choose a resume --</option>
+                </select>
               </div>
-              <textarea id="bullet-input" class="form-textarea" style="min-height: 80px;" placeholder="e.g. Worked on frontend web features and fixed various user bugs..."></textarea>
+
+              <div class="form-group">
+                <label class="form-label" for="interview-role-input">Target Job Role</label>
+                <input type="text" id="interview-role-input" class="form-input" placeholder="e.g. Frontend Developer, Backend Software Engineer, Data Scientist">
+              </div>
             </div>
 
-            <button type="submit" id="btn-rewrite-bullet" class="btn btn-primary" style="padding: 12px 24px; align-self: flex-start;">
-              <span class="spinner" id="bullet-spinner"></span>
-              <span>Elevate & Quantify Bullet</span>
+            <!-- Difficulty Level Selection (Basic / Intermediate / Advanced) -->
+            <div class="form-group">
+              <label class="form-label">
+                <span>Select Question Difficulty Level</span>
+                <span style="font-size: 0.78rem; color: var(--text-dim); font-weight: normal;">Tailors question depth, problem complexity, and expected technical rigor</span>
+              </label>
+              <input type="hidden" id="interview-difficulty-level" value="intermediate">
+              <div class="difficulty-selector-grid">
+                <div class="difficulty-card" data-level="basic" id="diff-card-basic">
+                  <div class="difficulty-card-header">
+                    <span class="difficulty-icon">🟢</span>
+                    <span class="difficulty-title">Basic</span>
+                    <span class="difficulty-badge badge-basic">Fundamentals</span>
+                  </div>
+                  <p class="difficulty-desc">Core language syntax, fundamentals, definitions, and relational keys for beginner-friendly practice.</p>
+                </div>
+
+                <div class="difficulty-card active" data-level="intermediate" id="diff-card-intermediate">
+                  <div class="difficulty-card-header">
+                    <span class="difficulty-icon">🔵</span>
+                    <span class="difficulty-title">Intermediate</span>
+                    <span class="difficulty-badge badge-intermediate">Practical</span>
+                  </div>
+                  <p class="difficulty-desc">Real-world application, error handling, query optimization, state flow, and production troubleshooting.</p>
+                </div>
+
+                <div class="difficulty-card" data-level="advanced" id="diff-card-advanced">
+                  <div class="difficulty-card-header">
+                    <span class="difficulty-icon">🟣</span>
+                    <span class="difficulty-title">Advanced</span>
+                    <span class="difficulty-badge badge-advanced">Architecture</span>
+                  </div>
+                  <p class="difficulty-desc">Distributed systems, p99 latency optimization, index trade-offs, scalability, and resilience engineering.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="interview-job-desc">Target Job Description (Optional — aligns technical deep dives & skill gap questions)</label>
+              <textarea id="interview-job-desc" class="form-textarea" style="min-height: 85px;" placeholder="Paste job requirements or required tech stack to align interview questions directly with the role..."></textarea>
+            </div>
+
+            <button type="submit" id="btn-generate-interview" class="btn btn-primary" style="padding: 12px 26px; align-self: flex-start;">
+              <span class="spinner" id="interview-spinner"></span>
+              <span>Generate Interview Questions & Answers</span>
             </button>
           </form>
 
-          <div id="bullet-results" style="display: none; margin-top: 10px;">
-            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Optimized High-Impact Variations:</h3>
-            <div class="bullet-variations-list" id="bullet-variations-container"></div>
+          <div id="interview-results" style="display: none; margin-top: 18px;">
+            <!-- Interview Results Meta Header -->
+            <div class="interview-header-bar">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0;">Predicted Interview Questions</h3>
+                <span class="badge badge-ai" id="interview-active-level-badge">Intermediate</span>
+                <span class="badge badge-secondary" id="interview-active-role-badge">Software Engineer</span>
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary" id="btn-toggle-all-answers" style="padding: 6px 14px; font-size: 0.8rem;">
+                  Show All Answers
+                </button>
+              </div>
+            </div>
+
+            <!-- Question Navigation Pills -->
+            <div class="interview-nav-pills" id="interview-nav-pills"></div>
+
+            <!-- Questions Cards Container -->
+            <div style="display: flex; flex-direction: column; gap: 18px; margin-top: 14px;" id="interview-questions-container"></div>
           </div>
         </div>
 
@@ -421,35 +487,6 @@
             </div>
 
             <pre class="cover-letter-paper" id="cover-letter-text"></pre>
-          </div>
-        </div>
-
-        <!-- Tab 3: Interview Coach & Q&A Panel -->
-        <div class="career-panel" id="tab-interview">
-          <form id="interview-prep-form" style="display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
-              <div class="form-group">
-                <label class="form-label" for="interview-resume-select">Select Source Resume</label>
-                <select id="interview-resume-select" class="form-select" required>
-                  <option value="">-- Choose a resume --</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label" for="interview-job-desc">Target Job Description (Identifies technical deep dives & skill gap questions)</label>
-                <textarea id="interview-job-desc" class="form-textarea" style="min-height: 90px;" placeholder="Paste job requirements to generate role-specific questions and talking points..."></textarea>
-              </div>
-            </div>
-
-            <button type="submit" id="btn-generate-interview" class="btn btn-primary" style="padding: 12px 24px; align-self: flex-start;">
-              <span class="spinner" id="interview-spinner"></span>
-              <span>Predict Interview Questions & Answers</span>
-            </button>
-          </form>
-
-          <div id="interview-results" style="display: none; margin-top: 14px;">
-            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px;">Predicted High-Probability Interview Questions:</h3>
-            <div style="display: flex; flex-direction: column; gap: 16px;" id="interview-questions-container"></div>
           </div>
         </div>
 

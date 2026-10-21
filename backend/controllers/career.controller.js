@@ -1,40 +1,15 @@
 // backend/controllers/career.controller.js
 // -------------------------------------------------------
-// Controller for AI Career Assistant: Bullet rewriter, cover letter, & interview prep
+// Controller for AI Career Assistant: Cover Letter & Interview Preparation Coach
 // -------------------------------------------------------
 'use strict';
 
 const ResumeModel = require('../models/resume.model');
 const UserModel = require('../models/user.model');
 const {
-  rewriteBulletPoint,
   generateCoverLetter,
   generateInterviewQuestions
 } = require('../utils/career-assistant.util');
-
-/**
- * Optimizes a resume bullet point into 3 impactful variations.
- * Route: POST /career/rewrite-bullet
- */
-async function rewriteBullet(req, res) {
-  try {
-    const { bullet_point, focus_role, target_skill } = req.body;
-
-    if (!bullet_point || bullet_point.trim().length < 5) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide a bullet point with at least 5 characters.'
-      });
-    }
-
-    const result = rewriteBulletPoint(bullet_point, focus_role, target_skill);
-    return res.json({ success: true, result });
-
-  } catch (err) {
-    console.error('[rewriteBullet]', err);
-    return res.status(500).json({ success: false, message: err.message || 'Error rewriting bullet point.' });
-  }
-}
 
 /**
  * Generates a tailored, professional cover letter matching a candidate's resume to target job.
@@ -75,15 +50,27 @@ async function createCoverLetter(req, res) {
 }
 
 /**
- * Generates personalized interview questions and talking points based on candidate skills.
+ * Generates personalized interview questions, sample answers, and talking points
+ * adapted to candidate skills, target role, and selected difficulty level (basic, intermediate, advanced).
  * Route: POST /career/interview-prep
  */
 async function getInterviewPrep(req, res) {
   try {
-    const { resume_id, job_description } = req.body;
+    const { resume_id, job_description, role_title, difficulty_level } = req.body;
 
     if (!resume_id) {
       return res.status(400).json({ success: false, message: 'Please select a resume.' });
+    }
+
+    // Validate difficulty level: only basic, intermediate, or advanced allowed
+    const validLevels = ['basic', 'intermediate', 'advanced'];
+    const selectedLevel = (difficulty_level || 'intermediate').toString().toLowerCase().trim();
+
+    if (!validLevels.includes(selectedLevel)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid difficulty level. Must be basic, intermediate, or advanced.'
+      });
     }
 
     const resumeIdNum = parseInt(resume_id, 10);
@@ -95,7 +82,9 @@ async function getInterviewPrep(req, res) {
 
     const result = generateInterviewQuestions(
       resume.extracted_text || '',
-      job_description || ''
+      job_description || '',
+      role_title || '',
+      selectedLevel
     );
 
     return res.json({ success: true, result });
@@ -107,7 +96,7 @@ async function getInterviewPrep(req, res) {
 }
 
 module.exports = {
-  rewriteBullet,
   createCoverLetter,
   getInterviewPrep
 };
+

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console & Platform Analytics — ResumeAI</title>
+  <meta name="description" content="ResumeAI Administration: Real-time telemetry, service health monitoring, user governance, and platform analytics.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="dashboard-layout admin-layout">
+
+  <!-- Admin Top Navigation Header -->
+  <header class="dashboard-header admin-header">
+    <div class="container dashboard-nav">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <a href="/pages/admin.html" class="brand-logo" id="admin-logo">
+          <div class="brand-icon admin-brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <span>Resume<span class="gradient-text-accent">AI</span></span>
+        </a>
+        <span class="badge badge-admin-console">Admin Console</span>
+      </div>
+
+      <div class="user-profile-menu">
+        <a href="/pages/dashboard.html" class="btn btn-secondary" style="padding: 8px 14px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Candidate Dashboard</span>
+        </a>
+
+        <div class="user-info">
+          <div class="user-avatar admin-avatar" id="admin-avatar">A</div>
+          <div class="user-details">
+            <span class="user-name" id="admin-user-name">Loading...</span>
+            <span class="user-role badge badge-admin" id="admin-role-badge">ADMIN</span>
+          </div>
+        </div>
+
+        <button id="admin-logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.85rem;" title="Sign out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container" style="padding-top: 28px; padding-bottom: 60px;">
+
+    <!-- Admin Hero Welcome Banner -->
+    <div class="admin-hero-banner">
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+          <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em;">Platform Telemetry & Governance</h1>
+          <span class="badge badge-success" style="font-size: 0.72rem;">Live Production State</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+          Monitor real-time microservice health, inspect candidate career analytics, and manage administrative user privileges.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <button type="button" id="btn-refresh-all" class="btn btn-secondary" style="padding: 10px 18px; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 8px;">
+          <svg id="refresh-spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+          </svg>
+          <span>Refresh Telemetry</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. Live System Health Monitor -->
+    <section class="admin-section" aria-label="System Health">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          Live Service Health & Telemetry
+        </h2>
+        <span class="text-dim" style="font-size: 0.82rem;">Real-time heartbeat across all architectural components</span>
+      </div>
+
+      <div class="health-grid">
+        <!-- Card 1: Node.js Express Server -->
+        <div class="health-card" id="health-node-card">
+          <div class="health-card-header">
+            <div class="service-meta">
+              <span class="service-name">Node.js Express Server</span>
+              <span class="service-port">Port 3000 • Core API</span>
+            </div>
+            <div class="status-indicator online" id="status-node-beacon">
+              <span class="status-dot"></span>
+              <span id="status-node-text">ONLINE</span>
+            </div>
+          </div>
+          <div class="health-metrics-list">
+            <div class="metric-row">
+              <span class="metric-label">Server Uptime</span>
+              <strong class="metric-val" id="metric-node-uptime">--</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Memory Heap Used</span>
+              <strong class="metric-val" id="metric-node-memory">-- MB</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Runtime Engine</span>
+              <strong class="metric-val" id="metric-node-version">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: MySQL Database -->
+        <div class="health-card" id="health-db-card">
+          <div class="health-card-header">
+            <div class="service-meta">
+              <span class="service-name">MySQL Database</span>
+              <span class="service-port">Port 3306 • Relational Store</span>
+            </div>
+            <div class="status-indicator online" id="status-db-beacon">
+              <span class="status-dot"></span>
+              <span id="status-db-text">CONNECTED</span>
+            </div>
+          </div>
+          <div class="health-metrics-list">
+            <div class="metric-row">
+              <span class="metric-label">Query Ping Latency</span>
+              <strong class="metric-val" id="metric-db-latency" style="color: #6ee7b7;">-- ms</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Engine Storage</span>
+              <strong class="metric-val">InnoDB (utf8mb4)</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Schema Health</span>
+              <strong class="metric-val" style="color: #38bdf8;">Verified Cascades</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Python ML Microservice -->
+        <div class="health-card" id="health-ml-card">
+          <div class="health-card-header">
+            <div class="service-meta">
+              <span class="service-name">Python ML Microservice</span>
+              <span class="service-port">Port 8000 • FastAPI & scikit-learn</span>
+            </div>
+            <div class="status-indicator online" id="status-ml-beacon">
+              <span class="status-dot"></span>
+              <span id="status-ml-text">ONLINE</span>
+            </div>
+          </div>
+          <div class="health-metrics-list">
+            <div class="metric-row">
+              <span class="metric-label">HTTP Ping Latency</span>
+              <strong class="metric-val" id="metric-ml-latency" style="color: #6ee7b7;">-- ms</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">ML Vector Engine</span>
+              <strong class="metric-val" id="metric-ml-model" style="font-size: 0.78rem;">TF-IDF + Cosine</strong>
+            </div>
+            <div class="metric-row">
+              <span class="metric-label">Fallback Architecture</span>
+              <strong class="metric-val" style="color: #a78bfa;">Auto Rule Fallback</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Platform Overview Metrics Grid -->
+    <section class="admin-section" aria-label="Platform Metrics" style="margin-top: 32px;">
+      <div class="section-title-wrap">
+        <h2 class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          Aggregated Platform Intelligence
+        </h2>
+        <span class="text-dim" style="font-size: 0.82rem;">Overall volume and benchmark scores across all candidates</span>
+      </div>
+
+      <div class="admin-stats-grid">
+        <!-- Stat 1: Total Users -->
+        <div class="glass-panel admin-stat-box">
+          <div class="stat-top">
+            <span class="stat-name">Total Registered Users</span>
+            <div class="stat-icon-wrap" style="color: #38bdf8; background: rgba(56, 189, 248, 0.12);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+          </div>
+          <div class="stat-hero-number" id="stat-total-users">0</div>
+          <div class="stat-subtext" id="stat-users-sub">0 Candidates • 0 Admins</div>
+        </div>
+
+        <!-- Stat 2: Total Resumes -->
+        <div class="glass-panel admin-stat-box">
+          <div class="stat-top">
+            <span class="stat-name">Resumes Processed</span>
+            <div class="stat-icon-wrap" style="color: #6ee7b7; background: rgba(110, 231, 183, 0.12);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </div>
+          </div>
+          <div class="stat-hero-number" id="stat-total-resumes">0</div>
+          <div class="stat-subtext" id="stat-resumes-sub">0 PDF Documents • 0 DOCX</div>
+        </div>
+
+        <!-- Stat 3: Total Analyses -->
+        <div class="glass-panel admin-stat-box">
+          <div class="stat-top">
+            <span class="stat-name">ATS Analyses Generated</span>
+            <div class="stat-icon-wrap" style="color: #c084fc; background: rgba(192, 132, 252, 0.12);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            </div>
+          </div>
+          <div class="stat-hero-number" id="stat-total-analyses">0</div>
+          <div class="stat-subtext">Automated scoring runs</div>
+        </div>
+
+        <!-- Stat 4: Average Score -->
+        <div class="glass-panel admin-stat-box">
+          <div class="stat-top">
+            <span class="stat-name">Platform Average ATS Score</span>
+            <div class="stat-icon-wrap" style="color: #fbbf24; background: rgba(251, 191, 36, 0.12);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+          </div>
+          <div class="stat-hero-number" id="stat-avg-score">--%</div>
+          <div class="stat-subtext" id="stat-score-range">Min: --% • Max: --%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Visual Analytics Breakdown -->
+    <section class="admin-section" aria-label="Visual Analytics" style="margin-top: 32px;">
+      <div class="analytics-split-grid">
+        <!-- Left: Top Predicted Career Roles Distribution -->
+        <div class="glass-panel admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>Top Predicted Career Roles</h3>
+              <p>Most frequently identified candidate profiles based on skill vectors.</p>
+            </div>
+          </div>
+          <div class="roles-distribution-list" id="roles-distribution-container">
+            <!-- Dynamically populated by admin.js -->
+            <div style="color: var(--text-dim); font-size: 0.9rem; text-align: center; padding: 24px;">Loading career distribution...</div>
+          </div>
+        </div>
+
+        <!-- Right: Document Formats & Platform Distribution -->
+        <div class="glass-panel admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h3>Document Format Breakdown</h3>
+              <p>Distribution of candidate upload formats and ingestion throughput.</p>
+            </div>
+          </div>
+          <div class="format-breakdown-content" id="format-breakdown-container">
+            <!-- Dynamically populated by admin.js -->
+            <div style="color: var(--text-dim); font-size: 0.9rem; text-align: center; padding: 24px;">Loading format metrics...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. User Accounts Management Table -->
+    <section class="admin-section" aria-label="User Accounts Management" style="margin-top: 36px;">
+      <div class="glass-panel admin-card">
+        <div class="admin-card-header" style="flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3>User Accounts Governance</h3>
+              <span class="badge badge-secondary" id="users-count-badge">0 Users</span>
+            </div>
+            <p>Manage candidate roles, search accounts, and securely govern user access.</p>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="table-controls-wrap">
+            <div class="search-input-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="user-search-input" class="admin-search-input" placeholder="Search by name or email...">
+            </div>
+
+            <div class="role-filter-group">
+              <button type="button" class="role-filter-btn active" data-role="all">All</button>
+              <button type="button" class="role-filter-btn" data-role="admin">Admins</button>
+              <button type="button" class="role-filter-btn" data-role="user">Candidates</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Resumes</th>
+                <th>Analyses</th>
+                <th>Registered</th>
+                <th style="text-align: right;">Administrative Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 32px;">
+                  Loading registered user accounts...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Real-Time Platform Activity Audit Feed -->
+    <section class="admin-section" aria-label="System Activity Audit Feed" style="margin-top: 36px;">
+      <div class="glass-panel admin-card">
+        <div class="admin-card-header" style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <h3>Global Activity Audit Feed</h3>
+              <span class="badge badge-ai"><span class="badge-pulse"></span> Live Stream</span>
+            </div>
+            <p>Recent resume uploads, candidate analyses, and platform interactions.</p>
+          </div>
+          <button type="button" id="btn-refresh-feed" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.82rem;">
+            Refresh Feed
+          </button>
+        </div>
+
+        <div class="activity-feed-list" id="activity-feed-container">
+          <div style="text-align: center; color: var(--text-dim); padding: 24px;">Loading platform activity stream...</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Confirmation Modal for Actions -->
+  <div class="modal-overlay" id="confirm-modal">
+    <div class="glass-panel modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <div class="modal-title" id="confirm-modal-title">Confirm Action</div>
+        <button class="action-icon-btn" id="confirm-modal-close" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 20px 24px;">
+        <p id="confirm-modal-message" style="color: var(--text-main); font-size: 0.95rem; line-height: 1.5;"></p>
+      </div>
+      <div class="modal-footer" style="padding: 16px 24px; justify-content: flex-end; gap: 10px;">
+        <button type="button" class="btn btn-secondary" id="confirm-modal-cancel" style="padding: 8px 18px;">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirm-modal-action-btn" style="padding: 8px 20px;">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/toast.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

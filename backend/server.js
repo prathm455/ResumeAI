@@ -30,6 +30,7 @@ const authRoutes = require('./routes/auth.routes');
 const resumeRoutes = require('./routes/resume.routes');
 const analysisRoutes = require('./routes/analysis.routes');
 const careerRoutes = require('./routes/career.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 // ── App Setup ─────────────────────────────────────────
 const app  = express();
@@ -105,6 +106,7 @@ app.use('/auth', authRoutes);
 app.use('/resumes', resumeRoutes);
 app.use('/analyses', analysisRoutes);
 app.use('/career', careerRoutes);
+app.use('/admin', adminRoutes);
 
 // ── Health Check ─────────────────────────────────────
 app.get('/api/health', (req, res) => {

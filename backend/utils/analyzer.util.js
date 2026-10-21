@@ -295,5 +295,6 @@ module.exports = {
   extractSkills,
   predictRole,
   evaluateResumeStructure,
-  ALL_SKILLS
+  ALL_SKILLS,
+  SKILLS_TAXONOMY
 };

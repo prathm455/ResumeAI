@@ -14,9 +14,6 @@ const { requireAuth } = require('../middlewares/auth.middleware');
 // All career assistant routes require user authentication
 router.use(requireAuth);
 
-// POST /career/rewrite-bullet
-router.post('/rewrite-bullet', careerController.rewriteBullet);
-
 // POST /career/cover-letter
 router.post('/cover-letter', careerController.createCoverLetter);
 
@@ -24,3 +21,4 @@ router.post('/cover-letter', careerController.createCoverLetter);
 router.post('/interview-prep', careerController.getInterviewPrep);
 
 module.exports = router;
+

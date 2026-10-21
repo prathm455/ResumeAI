@@ -23,8 +23,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const welcomeNameEl = document.getElementById('welcome-user-name');
 
     if (userNameEl) userNameEl.textContent = user.full_name;
-    if (welcomeNameEl) welcomeNameEl.textContent = user.full_name.split(' ')[0];
-    if (userRoleEl) userRoleEl.textContent = user.role;
+    if (userRoleEl) {
+      userRoleEl.textContent = user.role.toUpperCase();
+      if (user.role === 'admin') {
+        userRoleEl.className = 'user-role badge badge-secondary';
+        userRoleEl.style.color = '#c084fc';
+        userRoleEl.style.borderColor = 'rgba(168, 85, 247, 0.4)';
+      }
+    }
+    const adminLink = document.getElementById('nav-admin-link');
+    if (adminLink && user.role === 'admin') {
+      adminLink.style.display = 'inline-flex';
+    }
     if (userAvatarEl) {
       userAvatarEl.textContent = user.full_name.charAt(0).toUpperCase();
     }
@@ -265,7 +275,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 5. Phase 3: AI Job Match & Analysis Execution
+  // 5. AI Job Match & Analysis Execution
   const analyzeForm = document.getElementById('analyze-form');
   const sampleJdBtn = document.getElementById('btn-sample-jd');
   const analyzeBtn = document.getElementById('btn-run-analysis');
@@ -644,7 +654,7 @@ Requirements & Technical Skills:
     });
   }
 
-  // 10. Phase 5: Career Assistant Studio Sub-Navigation
+  // 10. Career Assistant Studio Sub-Navigation
   const careerTabBtns = document.querySelectorAll('.career-tab-btn');
   const careerPanels = document.querySelectorAll('.career-panel');
 
@@ -659,92 +669,7 @@ Requirements & Technical Skills:
     });
   });
 
-  // Tool 1: Bullet Point Rewriter
-  const bulletForm = document.getElementById('bullet-rewriter-form');
-  const bulletInput = document.getElementById('bullet-input');
-  const bulletSpinner = document.getElementById('bullet-spinner');
-  const bulletResults = document.getElementById('bullet-results');
-  const bulletContainer = document.getElementById('bullet-variations-container');
-  const sampleBullet1 = document.getElementById('btn-sample-bullet-1');
-  const sampleBullet2 = document.getElementById('btn-sample-bullet-2');
-
-  if (sampleBullet1 && bulletInput) {
-    sampleBullet1.addEventListener('click', () => {
-      bulletInput.value = 'Worked on frontend components using React and helped reduce page load bugs.';
-    });
-  }
-
-  if (sampleBullet2 && bulletInput) {
-    sampleBullet2.addEventListener('click', () => {
-      bulletInput.value = 'Responsible for writing Python backend APIs and managing MySQL queries in the cloud.';
-    });
-  }
-
-  if (bulletForm && bulletInput) {
-    bulletForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = bulletInput.value.trim();
-      if (!text) {
-        showToast('Please enter a bullet point to rewrite.', 'error');
-        return;
-      }
-
-      const submitBtn = document.getElementById('btn-rewrite-bullet');
-      try {
-        submitBtn.disabled = true;
-        if (bulletSpinner) bulletSpinner.style.display = 'inline-block';
-
-        const res = await API.rewriteBullet(text);
-
-        if (res.success && res.result) {
-          showToast('Bullet point elevated successfully!', 'success');
-          renderBulletVariations(res.result);
-        } else {
-          showToast(res.message || 'Failed to rewrite bullet.', 'error');
-        }
-      } catch (err) {
-        console.error('Bullet rewriter error:', err);
-        showToast('Error rewriting bullet point.', 'error');
-      } finally {
-        submitBtn.disabled = false;
-        if (bulletSpinner) bulletSpinner.style.display = 'none';
-      }
-    });
-  }
-
-  function renderBulletVariations(data) {
-    if (!bulletResults || !bulletContainer) return;
-    bulletResults.style.display = 'block';
-
-    bulletContainer.innerHTML = data.variations.map((v, i) => `
-      <div class="bullet-variation-card">
-        <div class="bullet-card-header">
-          <span class="bullet-style-title">${escapeHtml(v.style)}</span>
-          <span class="badge badge-success" style="font-size: 0.72rem;">${escapeHtml(v.badge)}</span>
-        </div>
-        <p class="bullet-text">${escapeHtml(v.text)}</p>
-        <div class="bullet-card-footer">
-          <span>Focus: <em>${escapeHtml(v.metrics_highlight)}</em></span>
-          <button type="button" class="btn btn-secondary btn-copy-variation" data-text="${escapeHtml(v.text)}" style="padding: 4px 10px; font-size: 0.75rem;">
-            Copy Variation
-          </button>
-        </div>
-      </div>
-    `).join('');
-
-    bulletContainer.querySelectorAll('.btn-copy-variation').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const textToCopy = btn.getAttribute('data-text');
-        navigator.clipboard.writeText(textToCopy)
-          .then(() => showToast('Variation copied to clipboard!', 'success'))
-          .catch(() => showToast('Failed to copy.', 'error'));
-      });
-    });
-
-    bulletResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // Tool 2: Cover Letter Generator
+  // Tool 1: Cover Letter Generator
   const coverForm = document.getElementById('cover-letter-form');
   const coverResumeSelect = document.getElementById('cover-resume-select');
   const coverCompanyInput = document.getElementById('cover-company-input');
@@ -861,18 +786,43 @@ Requirements & Technical Skills:
     });
   }
 
-  // Tool 3: Interview Coach & Q&A
+  // Tool 2: Interview Coach & Q&A
   const interviewForm = document.getElementById('interview-prep-form');
   const interviewResumeSelect = document.getElementById('interview-resume-select');
+  const interviewRoleInput = document.getElementById('interview-role-input');
   const interviewJobDesc = document.getElementById('interview-job-desc');
   const interviewSpinner = document.getElementById('interview-spinner');
   const interviewResults = document.getElementById('interview-results');
   const interviewContainer = document.getElementById('interview-questions-container');
+  const interviewNavPills = document.getElementById('interview-nav-pills');
+  const activeLevelBadge = document.getElementById('interview-active-level-badge');
+  const activeRoleBadge = document.getElementById('interview-active-role-badge');
+  const btnToggleAllAnswers = document.getElementById('btn-toggle-all-answers');
+
+  let currentDifficulty = 'intermediate';
+  let candidatePracticeAnswers = {};
+  let currentQuestions = [];
+  let allAnswersShown = false;
+
+  // Handle difficulty selection cards
+  const diffCards = document.querySelectorAll('.difficulty-card');
+  const diffHiddenInput = document.getElementById('interview-difficulty-level');
+
+  diffCards.forEach(card => {
+    card.addEventListener('click', () => {
+      diffCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      const selected = card.getAttribute('data-level') || 'intermediate';
+      currentDifficulty = selected;
+      if (diffHiddenInput) diffHiddenInput.value = selected;
+    });
+  });
 
   if (interviewForm) {
     interviewForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const resumeId = interviewResumeSelect.value;
+      const roleTitle = interviewRoleInput ? interviewRoleInput.value.trim() : '';
       const jd = interviewJobDesc.value.trim();
 
       if (!resumeId) {
@@ -887,11 +837,13 @@ Requirements & Technical Skills:
 
         const res = await API.generateInterviewPrep({
           resume_id: resumeId,
-          job_description: jd
+          role_title: roleTitle,
+          job_description: jd,
+          difficulty_level: currentDifficulty
         });
 
         if (res.success && res.result) {
-          showToast('Predicted interview questions generated!', 'success');
+          showToast(`Generated 5 ${res.result.difficulty_level || ''} interview questions!`, 'success');
           renderInterviewQuestions(res.result);
         } else {
           showToast(res.message || 'Failed to generate questions.', 'error');
@@ -910,22 +862,170 @@ Requirements & Technical Skills:
     if (!interviewResults || !interviewContainer) return;
     interviewResults.style.display = 'block';
 
-    const questions = data.questions || [];
-    interviewContainer.innerHTML = questions.map(q => `
-      <div class="interview-q-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <span class="badge badge-ai" style="font-size: 0.75rem;">${escapeHtml(q.category)}</span>
-          <span style="font-size: 0.78rem; color: var(--accent-cyan); font-weight: 600;">Framework: ${escapeHtml(q.recommended_model)}</span>
+    currentQuestions = data.questions || [];
+    const level = (data.difficulty_level || currentDifficulty).toLowerCase();
+
+    // Update Meta Bar
+    if (activeLevelBadge) {
+      activeLevelBadge.textContent = data.difficulty_level || 'Intermediate';
+      activeLevelBadge.className = 'badge';
+      if (level === 'basic') activeLevelBadge.classList.add('badge-basic');
+      else if (level === 'advanced') activeLevelBadge.classList.add('badge-advanced');
+      else activeLevelBadge.classList.add('badge-intermediate');
+    }
+
+    if (activeRoleBadge) {
+      activeRoleBadge.textContent = data.role_title || 'Software Engineer';
+    }
+
+    // Render Navigation Pills
+    if (interviewNavPills) {
+      interviewNavPills.innerHTML = `
+        <button type="button" class="nav-pill-btn active" data-filter="all">All (5 Questions)</button>
+        ${currentQuestions.map(q => `
+          <button type="button" class="nav-pill-btn" data-filter="${q.id}">Q${q.id}</button>
+        `).join('')}
+      `;
+
+      interviewNavPills.querySelectorAll('.nav-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          interviewNavPills.querySelectorAll('.nav-pill-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.getAttribute('data-filter');
+
+          const allCards = interviewContainer.querySelectorAll('.interview-q-card');
+          if (filter === 'all') {
+            allCards.forEach(c => c.style.display = 'flex');
+          } else {
+            allCards.forEach(c => {
+              if (c.getAttribute('data-qid') === filter) {
+                c.style.display = 'flex';
+                c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              } else {
+                c.style.display = 'none';
+              }
+            });
+          }
+        });
+      });
+    }
+
+    // Render Question Cards
+    interviewContainer.innerHTML = currentQuestions.map(q => {
+      const qLevel = (q.difficulty_level || 'Intermediate').toLowerCase();
+      const badgeClass = qLevel === 'basic' ? 'badge-basic' : (qLevel === 'advanced' ? 'badge-advanced' : 'badge-intermediate');
+      const savedAnswer = candidatePracticeAnswers[q.id] || '';
+
+      return `
+        <div class="interview-q-card level-${qLevel}" id="q-card-${q.id}" data-qid="${q.id}">
+          <div class="interview-q-header">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="difficulty-badge ${badgeClass}">${escapeHtml(q.difficulty_level)}</span>
+              <span class="badge badge-ai" style="font-size: 0.75rem;">${escapeHtml(q.category)}</span>
+              <span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 600;">Question ${q.id} of ${currentQuestions.length}</span>
+            </div>
+            <span style="font-size: 0.78rem; color: var(--accent-cyan); font-weight: 600;">Framework: ${escapeHtml(q.recommended_model)}</span>
+          </div>
+
+          <div class="interview-q-title">Q${q.id}. ${escapeHtml(q.question)}</div>
+
+          <!-- Practice Answer Area -->
+          <div class="candidate-practice-box">
+            <div class="candidate-practice-label">
+              <span>✍️ Your Practice Answer:</span>
+              <span style="font-size: 0.72rem; color: var(--text-dim);">Practice structuring your thoughts before viewing the model answer</span>
+            </div>
+            <textarea class="form-textarea candidate-practice-textarea" data-qid="${q.id}" placeholder="Type your practice response here...">${escapeHtml(savedAnswer)}</textarea>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="interview-card-actions">
+            <button type="button" class="btn btn-secondary btn-toggle-answer" data-target="answer-box-${q.id}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <span>Show Sample Answer</span>
+            </button>
+
+            ${q.id < currentQuestions.length ? `
+              <button type="button" class="btn btn-secondary btn-next-q" data-next="${q.id + 1}" style="padding: 6px 14px; font-size: 0.8rem;">
+                Next Question →
+              </button>
+            ` : `
+              <span style="font-size: 0.78rem; color: var(--text-dim);">Final Question</span>
+            `}
+          </div>
+
+          <!-- Sample Answer & Key Points Collapsible Box -->
+          <div class="sample-answer-box" id="answer-box-${q.id}" style="display: none;">
+            <div class="sample-answer-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Model Sample Answer</span>
+            </div>
+            <div class="sample-answer-text">${escapeHtml(q.sample_answer)}</div>
+            <div class="talking-points-box">
+              <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Key Interviewer Expectations:</div>
+              <ul>
+                ${q.talking_points.map(tp => `<li>${escapeHtml(tp)}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="interview-q-title">Q${q.id}: ${escapeHtml(q.question)}</div>
-        <div class="talking-points-box">
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Key Talking Points & Strategy:</div>
-          <ul>
-            ${q.talking_points.map(tp => `<li>${escapeHtml(tp)}</li>`).join('')}
-          </ul>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+
+    // Attach Practice Answer Auto-Save Listener
+    interviewContainer.querySelectorAll('.candidate-practice-textarea').forEach(textarea => {
+      textarea.addEventListener('input', () => {
+        const qid = textarea.getAttribute('data-qid');
+        candidatePracticeAnswers[qid] = textarea.value;
+      });
+    });
+
+    // Attach Toggle Answer Listeners
+    interviewContainer.querySelectorAll('.btn-toggle-answer').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const box = document.getElementById(targetId);
+        if (!box) return;
+
+        const isHidden = box.style.display === 'none' || !box.style.display;
+        box.style.display = isHidden ? 'flex' : 'none';
+        btn.querySelector('span').textContent = isHidden ? 'Hide Sample Answer' : 'Show Sample Answer';
+      });
+    });
+
+    // Attach Next Question Listeners
+    interviewContainer.querySelectorAll('.btn-next-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const nextId = btn.getAttribute('data-next');
+        const nextCard = document.getElementById(`q-card-${nextId}`);
+        if (nextCard) {
+          // If filtered to single question, adjust filter pill
+          const activePill = interviewNavPills?.querySelector(`.nav-pill-btn[data-filter="${nextId}"]`);
+          if (activePill && interviewNavPills?.querySelector('.nav-pill-btn.active')?.getAttribute('data-filter') !== 'all') {
+            activePill.click();
+          }
+          nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    // Master Toggle All Answers
+    if (btnToggleAllAnswers) {
+      allAnswersShown = false;
+      btnToggleAllAnswers.textContent = 'Show All Answers';
+      btnToggleAllAnswers.onclick = () => {
+        allAnswersShown = !allAnswersShown;
+        btnToggleAllAnswers.textContent = allAnswersShown ? 'Hide All Answers' : 'Show All Answers';
+
+        interviewContainer.querySelectorAll('.sample-answer-box').forEach(box => {
+          box.style.display = allAnswersShown ? 'flex' : 'none';
+        });
+
+        interviewContainer.querySelectorAll('.btn-toggle-answer').forEach(btn => {
+          btn.querySelector('span').textContent = allAnswersShown ? 'Hide Sample Answer' : 'Show Sample Answer';
+        });
+      };
+    }
 
     interviewResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
