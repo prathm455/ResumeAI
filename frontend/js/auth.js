@@ -41,19 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (score <= 1) {
         strengthFill.style.width = '25%';
-        strengthFill.style.backgroundColor = '#f43f5e';
+        strengthFill.style.backgroundColor = '#DC2626';
         strengthText.textContent = 'Weak (Needs 8+ chars, numbers, symbols)';
       } else if (score === 2) {
         strengthFill.style.width = '50%';
-        strengthFill.style.backgroundColor = '#f59e0b';
+        strengthFill.style.backgroundColor = '#D97706';
         strengthText.textContent = 'Fair';
       } else if (score === 3) {
         strengthFill.style.width = '75%';
-        strengthFill.style.backgroundColor = '#38bdf8';
+        strengthFill.style.backgroundColor = '#0D9488';
         strengthText.textContent = 'Good';
       } else {
         strengthFill.style.width = '100%';
-        strengthFill.style.backgroundColor = '#10b981';
+        strengthFill.style.backgroundColor = '#16A34A';
         strengthText.textContent = 'Strong password!';
       }
     });

@@ -1,47 +1,63 @@
 /* ============================================================
    ResumeAI — Master Design System & Core Styles
-   Modern Dark Luxury & Glassmorphism Design
+   Clean, Modern, Professional Colour Theme (60-30-10 Palette)
    ============================================================ */
 
 :root {
-  /* Color Palette */
-  --bg-dark: #090d16;
-  --bg-card: rgba(18, 24, 38, 0.75);
-  --bg-card-hover: rgba(26, 34, 52, 0.85);
-  --bg-surface: #111827;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(99, 102, 241, 0.5);
-  --border-hover: rgba(255, 255, 255, 0.16);
+  /* 1. Core Colour Palette */
+  --primary-navy: #0F172A;       /* Primary Navy Blue (30% - headers, nav, key elements) */
+  --bg-page: #F1F5F9;            /* Light Gray Background (60% - page base) */
+  --bg-card: #FFFFFF;            /* Pure White Card Background */
+  --bg-card-hover: #FFFFFF;
+  --bg-surface: #F8FAFC;         /* Light Surface Tint */
+  --border-color: #E2E8F0;       /* Border Color */
+  --border-subtle: #E2E8F0;
+  --border-hover: #CBD5E1;
+  --border-focus: #0D9488;
 
-  /* Brand Accents */
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-glow: rgba(99, 102, 241, 0.35);
-  --accent-cyan: #06b6d4;
-  --accent-violet: #8b5cf6;
-  --accent-emerald: #10b981;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
+  /* 2. Accent & Interactive (10% - buttons, active states, highlights) */
+  --teal-accent: #0D9488;        /* Teal Accent */
+  --teal-hover: #0F766E;         /* Darker Teal Hover */
+  --teal-light: rgba(13, 148, 136, 0.08);
+  --teal-glow: rgba(13, 148, 136, 0.2);
 
-  /* Text Colors */
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  --primary: #0D9488;            /* Primary interactive elements use Teal */
+  --primary-hover: #0F766E;
+  --primary-glow: rgba(13, 148, 136, 0.2);
 
-  /* Typography */
+  /* 3. Semantic Status Indicators */
+  --success: #16A34A;            /* Success Green */
+  --success-light: rgba(22, 163, 74, 0.08);
+  --error: #DC2626;              /* Error Red */
+  --error-light: rgba(220, 38, 38, 0.08);
+  --warning: #D97706;            /* Amber Warning */
+  --warning-light: rgba(217, 119, 6, 0.08);
+
+  /* 4. Text Hierarchy */
+  --text-main: #1E293B;          /* Primary Text */
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;        /* Secondary Text */
+  --text-muted: #64748B;
+  --text-dim: #94A3B8;
+  --text-white: #FFFFFF;
+
+  /* 5. Typography */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  /* Radii & Shadows */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+
+  /* 6. Radii & Shadows */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
-  --shadow-card: 0 16px 40px -10px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 30px -5px var(--primary-glow);
+
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
 
   /* Transitions */
-  --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.25s ease;
 }
 
 /* Reset & Base */
@@ -53,7 +69,7 @@
 
 html {
   font-family: var(--font-sans);
-  background-color: var(--bg-dark);
+  background-color: var(--bg-page);
   color: var(--text-main);
   line-height: 1.6;
   scroll-behavior: smooth;
@@ -64,11 +80,8 @@ body {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 85% 25%, rgba(6, 182, 212, 0.10) 0%, transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-  background-attachment: fixed;
+  background-color: var(--bg-page);
+  color: var(--text-main);
 }
 
 /* Links & Buttons */
@@ -91,12 +104,10 @@ button {
   padding: 0 24px;
 }
 
-/* Glassmorphism Cards */
+/* Clean Professional Cards */
 .glass-panel {
   background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -104,20 +115,20 @@ button {
 
 .glass-panel:hover {
   border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
 }
 
-/* Gradient Text */
+/* Text Stylings */
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff 20%, #a5b4fc 60%, #67e8f9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-navy);
+  font-weight: 800;
   display: inline-block;
 }
 
 .gradient-text-accent {
-  background: linear-gradient(135deg, #818cf8 0%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--teal-accent);
+  font-weight: 800;
+  display: inline-block;
 }
 
 /* Badges */
@@ -125,32 +136,37 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: var(--radius-full);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
 
 .badge-ai {
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+  background: var(--teal-light);
+  color: var(--teal-accent);
+  border: 1px solid rgba(13, 148, 136, 0.25);
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+.badge-secondary {
+  background: #F1F5F9;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .badge-pulse {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
+  background: var(--teal-accent);
+  box-shadow: 0 0 6px rgba(13, 148, 136, 0.5);
   animation: pulse 2s infinite;
 }
 
@@ -159,56 +175,63 @@ button {
   50% { opacity: 0.4; transform: scale(0.85); }
 }
 
-/* Modern Buttons */
+/* Modern Professional Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 12px 24px;
+  gap: 8px;
+  padding: 10px 20px;
   border-radius: var(--radius-md);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   transition: all var(--transition-fast);
   cursor: pointer;
   white-space: nowrap;
 }
 
+/* Primary Button: Teal with White Text */
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 18px var(--primary-glow);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--teal-accent);
+  color: #FFFFFF;
+  border: 1px solid var(--teal-accent);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.5);
-  background: linear-gradient(135deg, #6b6ef5 0%, #4f46e5 100%);
+  background: var(--teal-hover);
+  border-color: var(--teal-hover);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
+/* Secondary Button: White with Navy Text and Light Border */
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
-  border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(10px);
+  background: #FFFFFF;
+  color: var(--primary-navy);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-surface);
   border-color: var(--border-hover);
-  transform: translateY(-2px);
+  color: var(--primary-navy);
+  transform: translateY(-1px);
 }
 
+/* Danger Button: Red */
 .btn-danger {
-  background: rgba(244, 63, 94, 0.12);
-  color: #fb7185;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  background: var(--error-light);
+  color: var(--error);
+  border: 1px solid rgba(220, 38, 38, 0.25);
 }
 
 .btn-danger:hover {
-  background: rgba(244, 63, 94, 0.25);
-  color: #fff;
+  background: var(--error);
+  color: #FFFFFF;
+  border-color: var(--error);
 }
 
 /* Toast Notifications */
@@ -228,53 +251,51 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 320px;
-  max-width: 440px;
-  padding: 14px 18px;
+  min-width: 300px;
+  max-width: 420px;
+  padding: 12px 18px;
   border-radius: var(--radius-md);
-  background: rgba(15, 23, 42, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-subtle);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
   color: var(--text-main);
   font-size: 0.9rem;
-  animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: opacity 0.3s, transform 0.3s;
+  animation: toastSlideIn 0.25s ease forwards;
+  transition: opacity 0.25s, transform 0.25s;
 }
 
 .toast.toast-success {
-  border-left: 4px solid var(--accent-emerald);
+  border-left: 4px solid var(--success);
 }
 
 .toast.toast-error {
-  border-left: 4px solid var(--accent-rose);
+  border-left: 4px solid var(--error);
 }
 
 .toast.toast-info {
-  border-left: 4px solid var(--primary);
+  border-left: 4px solid var(--teal-accent);
 }
 
 @keyframes toastSlideIn {
   from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
-/* Navbar */
+/* Navigation Bar: Navy Blue Background with White Text and Teal Active Indicator */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(9, 13, 22, 0.8);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 18px 0;
+  background: var(--primary-navy);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 0;
+  color: #FFFFFF;
 }
 
 .nav-container {
@@ -286,45 +307,63 @@ button {
 .brand-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 1.35rem;
+  gap: 10px;
+  font-size: 1.3rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  color: #FFFFFF;
 }
 
 .brand-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent-cyan) 100%);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: var(--teal-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px var(--primary-glow);
+  color: #FFFFFF;
 }
 
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
   list-style: none;
 }
 
 .nav-link {
   font-size: 0.92rem;
   font-weight: 500;
-  color: var(--text-muted);
+  color: #CBD5E1;
   transition: color var(--transition-fast);
+  padding: 6px 0;
+  position: relative;
 }
 
 .nav-link:hover {
-  color: var(--text-main);
+  color: #FFFFFF;
+}
+
+.nav-link.active {
+  color: #FFFFFF;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--teal-accent);
+  border-radius: 2px;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 /* Responsive */

@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (dbText) dbText.textContent = 'CONNECTED';
         if (dbLatency) {
           dbLatency.textContent = `${health.database.latency_ms} ms`;
-          dbLatency.style.color = health.database.latency_ms < 10 ? '#6ee7b7' : '#f59e0b';
+          dbLatency.style.color = health.database.latency_ms < 10 ? '#16A34A' : '#D97706';
         }
       } else {
         if (dbBeacon) dbBeacon.className = 'status-indicator offline';
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (mlText) mlText.textContent = 'ONLINE';
         if (mlLatency) {
           mlLatency.textContent = `${health.ml_service.latency_ms} ms`;
-          mlLatency.style.color = health.ml_service.latency_ms < 20 ? '#6ee7b7' : '#f59e0b';
+          mlLatency.style.color = health.ml_service.latency_ms < 20 ? '#16A34A' : '#D97706';
         }
         if (mlModel && health.ml_service.info) {
           mlModel.textContent = health.ml_service.info.model || 'scikit-learn TF-IDF';
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (mlText) mlText.textContent = 'OFFLINE';
         if (mlLatency) {
           mlLatency.textContent = 'Unreachable';
-          mlLatency.style.color = '#fb7185';
+          mlLatency.style.color = '#DC2626';
         }
         if (mlModel) mlModel.textContent = 'Native Rule Fallback Active';
       }
@@ -217,16 +217,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     container.innerHTML = `
       <div class="format-donut-wrap">
         <div class="format-stat-pill">
-          <div style="width: 12px; height: 12px; border-radius: 3px; background: #38bdf8;"></div>
+          <div style="width: 12px; height: 12px; border-radius: 3px; background: #0D9488;"></div>
           <div>
-            <div style="font-size: 1.15rem; font-weight: 800; color: #fff;">${pdfCount}</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-navy);">${pdfCount}</div>
             <div style="font-size: 0.78rem; color: var(--text-dim);">PDF Format (${pdfPct}%)</div>
           </div>
         </div>
         <div class="format-stat-pill">
-          <div style="width: 12px; height: 12px; border-radius: 3px; background: #6ee7b7;"></div>
+          <div style="width: 12px; height: 12px; border-radius: 3px; background: #16A34A;"></div>
           <div>
-            <div style="font-size: 1.15rem; font-weight: 800; color: #fff;">${docxCount}</div>
+            <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary-navy);">${docxCount}</div>
             <div style="font-size: 0.78rem; color: var(--text-dim);">DOCX Format (${docxPct}%)</div>
           </div>
         </div>
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await API.getAdminUsers(currentSearch, currentRoleFilter);
       if (!res.success) {
-        tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #fb7185; padding: 24px;">${escapeHtml(res.message || 'Error loading users.')}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #DC2626; padding: 24px;">${escapeHtml(res.message || 'Error loading users.')}</td></tr>`;
         return;
       }
 
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (err) {
       console.error('Error loading users table:', err);
-      tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #fb7185; padding: 24px;">Failed to fetch users list.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #DC2626; padding: 24px;">Failed to fetch users list.</td></tr>`;
     }
   }
 
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 data-id="${user.id}" 
                 data-name="${escapeHtml(user.full_name)}"
                 title="Delete User Account" 
-                style="color: #fb7185;">
+                style="color: #DC2626;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -484,7 +484,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (err) {
       console.error('Error fetching activity:', err);
-      container.innerHTML = `<div style="color: #fb7185; text-align: center; padding: 20px;">Error loading activity feed.</div>`;
+      container.innerHTML = `<div style="color: #DC2626; text-align: center; padding: 20px;">Error loading activity feed.</div>`;
     }
   }
 
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       confirmActionBtn.textContent = actionLabel;
       confirmActionBtn.className = isDestructive ? 'btn btn-primary' : 'btn btn-primary';
       if (isDestructive) {
-        confirmActionBtn.style.background = '#ef4444';
+        confirmActionBtn.style.background = '#DC2626';
       } else {
         confirmActionBtn.style.background = '';
       }

@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       userRoleEl.textContent = user.role.toUpperCase();
       if (user.role === 'admin') {
         userRoleEl.className = 'user-role badge badge-secondary';
-        userRoleEl.style.color = '#c084fc';
-        userRoleEl.style.borderColor = 'rgba(168, 85, 247, 0.4)';
+        userRoleEl.style.color = '#0D9488';
+        userRoleEl.style.borderColor = 'rgba(13, 148, 136, 0.35)';
       }
     }
     const adminLink = document.getElementById('nav-admin-link');
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return `
       <div class="resume-item" data-id="${resume.id}">
         <div class="resume-info">
-          <div class="resume-file-icon" style="color: ${isPdf ? '#fb7185' : '#38bdf8'}; background: ${isPdf ? 'rgba(244,63,94,0.15)' : 'rgba(56,189,248,0.15)'};">
+          <div class="resume-file-icon" style="color: ${isPdf ? '#DC2626' : '#0D9488'}; background: ${isPdf ? 'rgba(220,38,38,0.08)' : 'rgba(13,148,136,0.08)'};">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
@@ -370,17 +370,17 @@ Requirements & Technical Skills:
       gaugeCircle.style.strokeDashoffset = offset;
 
       if (score >= 80) {
-        gaugeCircle.style.stroke = '#10b981'; // Emerald
+        gaugeCircle.style.stroke = '#16A34A'; // Success Green
         matchBadge.className = 'badge badge-success';
         matchBadge.textContent = 'High Match';
         statusTitle.textContent = 'Exceptional Match';
       } else if (score >= 60) {
-        gaugeCircle.style.stroke = '#38bdf8'; // Cyan
+        gaugeCircle.style.stroke = '#0D9488'; // Teal Accent
         matchBadge.className = 'badge badge-ai';
         matchBadge.textContent = 'Moderate Match';
         statusTitle.textContent = 'Good Match';
       } else {
-        gaugeCircle.style.stroke = '#f43f5e'; // Rose
+        gaugeCircle.style.stroke = '#DC2626'; // Error Red
         matchBadge.className = 'badge badge-danger';
         matchBadge.textContent = 'Needs Optimization';
         statusTitle.textContent = 'Low Keyword Match';
@@ -410,12 +410,12 @@ Requirements & Technical Skills:
     if (mlMetrics) {
       const items = [];
       if (analysis.cosine_similarity !== null && analysis.cosine_similarity !== undefined) {
-        items.push(`<span>Cosine Vector Similarity: <strong style="color: #38bdf8;">${(analysis.cosine_similarity * 100).toFixed(1)}%</strong></span>`);
+        items.push(`<span>Cosine Vector Similarity: <strong style="color: #0D9488;">${(analysis.cosine_similarity * 100).toFixed(1)}%</strong></span>`);
       }
       if (analysis.role_confidence) {
-        items.push(`<span>Role Classification Confidence: <strong style="color: #6ee7b7;">${Math.round(analysis.role_confidence * 100)}%</strong></span>`);
+        items.push(`<span>Role Classification Confidence: <strong style="color: #16A34A;">${Math.round(analysis.role_confidence * 100)}%</strong></span>`);
       }
-      mlMetrics.innerHTML = items.join('<span style="color: rgba(255,255,255,0.2);">|</span>');
+      mlMetrics.innerHTML = items.join('<span style="color: #CBD5E1;">|</span>');
     }
 
     // Matched Skills
@@ -507,12 +507,12 @@ Requirements & Technical Skills:
 
     const isHigh = score >= 80;
     const isMedium = score >= 60;
-    const scoreColor = isHigh ? '#10b981' : (isMedium ? '#38bdf8' : '#f43f5e');
+    const scoreColor = isHigh ? '#16A34A' : (isMedium ? '#0D9488' : '#DC2626');
 
     return `
       <div class="resume-item" data-id="${analysis.id}">
         <div class="resume-info">
-          <div class="resume-file-icon" style="color: ${scoreColor}; background: rgba(255, 255, 255, 0.05); font-weight: 800; font-size: 0.88rem;">
+          <div class="resume-file-icon" style="color: ${scoreColor}; background: var(--bg-surface); border: 1px solid var(--border-color); font-weight: 800; font-size: 0.88rem;">
             ${score}%
           </div>
           <div class="resume-details">
