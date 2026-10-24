@@ -26,3 +26,12 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Python virtual environments
+venv/
+.venv/
+ml-service/venv/
+
+# Python cache
+__pycache__/
+*.pyc
