@@ -202,7 +202,7 @@ node server.js
 
 | Role | Email | Password |
 |---|---|---|
-| **Platform Administrator** | `admin@resumeai.com` | `Password123!` |
+| **Platform Administrator** | `admin@resumeai.com` | `xyz` |
 
 *(Admins can manage user roles, delete accounts, view live server telemetry, and inspect the platform activity feed directly from `/pages/admin.html`.)*
 
